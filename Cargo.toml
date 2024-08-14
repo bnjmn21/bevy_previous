@@ -1,0 +1,16 @@
+[package]
+name = "bevy_previous"
+version = "1.0.0"
+edition = "2021"
+authors = ["bnjmn21"]
+description = "Access previous values of components"
+documentation = "https://docs.rs/bevy_previous"
+readme = "README.md"
+repository = "https://github.com/bnjmn21/bevy_previous"
+license = "MIT"
+keywords = ["bevy", "previous", "component", "change_detection"]
+categories = ["game-engines", "game-development"]
+
+[dependencies]
+bevy = { version = "0.14.1", default-features = false }
+bevy_previous_macro = { path = "bevy_previous_macro" }
