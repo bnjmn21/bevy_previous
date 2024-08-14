@@ -82,3 +82,10 @@ This only works for schedules that implement the `DefaultSchedule` trait.
 This is automatically implemented by the standard bevy schedules, but
 for your own, you must either manually implement `DefaultSchedule` using
 `derive(DefaultSchedule)` helper macro or by using `PreviousPlugin::new(schedule)`.
+
+## Feature Flags
+
+Flag     | Description
+---------|-------------
+`derive` | *default:* Enable the derive macro for `DefaultSchedule`
+`serde`  | Enable `serde` implementations for `Previous`

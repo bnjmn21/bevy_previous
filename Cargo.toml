@@ -1,3 +1,5 @@
+[workspace]
+
 [package]
 name = "bevy_previous"
 version = "1.0.0"
@@ -13,4 +15,12 @@ categories = ["game-engines", "game-development"]
 
 [dependencies]
 bevy = { version = "0.14.1", default-features = false }
-bevy_previous_macro = { path = "bevy_previous_macro", version = "1.0.0" }
+bevy_previous_derive = { path = "bevy_previous_derive", version = "1.0.0", optional = true }
+
+serde = { version = "1.0", optional = true, features = ["derive"] }
+
+[features]
+default = ["derive"]
+
+serde = ["dep:serde"]
+derive = ["dep:bevy_previous_derive"]

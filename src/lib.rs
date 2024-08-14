@@ -3,25 +3,29 @@ use std::marker::PhantomData;
 #[allow(unused_imports)] // reason: used in docs
 use bevy::{app::FixedMain, ecs::schedule::ScheduleLabel, prelude::*};
 
-pub use bevy_previous_macro::DefaultSchedule;
+#[cfg(feature = "derive")]
+pub use bevy_previous_derive::DefaultSchedule;
 
 /// A component that represents the previous value of another component `T`.
 /// To enable previous-value-tracking for a component use [`PreviousPlugin`].
 /// The parameter `S` must be the same as the one specified in [`PreviousPlugin`],
 /// or be ommited, like with [`PreviousPlugin`].
 ///
-/// You don't have to manually add [`Previous<T>`] to your entity.
+/// You don't have to manually add [`Previous`] to your entity.
 /// This is done automatically in the specified schedule `S`.
 ///
 /// Also note that queries like `Query<(&T, &Previous<T>)>` won't match entities
-/// that were just created, as the may not have [`Previous<T>`] yet.
+/// that were just created, as the may not have [`Previous`] yet.
 ///
 /// Like with [`PreviousPlugin`], there is a [`FixedMain`] type alias for it: [`FixedUpdate`].
 ///
 /// # Examples
 ///
-/// ```
-/// #[derive(Component)]
+/// ```rust
+/// # use bevy::prelude::*;
+/// # use bevy_previous::*;
+///
+/// #[derive(Component, Clone)]
 /// struct Health(pub u32);
 ///
 /// fn main() {
@@ -33,19 +37,26 @@ pub use bevy_previous_macro::DefaultSchedule;
 ///
 /// fn print_differences(query: Query<(&Health, &Previous<Health>), Changed<Health>>) {
 ///     for (health, previous_health) in &query {
-///         println!("Health reduced by {}", previous_health - health);
+///         println!("Health reduced by {}", previous_health.0.0 - health.0);
 ///     }
 /// }
 /// ```
 ///
 /// With custom schedule:
 ///
-/// ```
-/// #[derive(Component)]
+/// ```rust
+/// # use bevy::{ecs::schedule::ScheduleLabel, prelude::*};
+/// # use bevy_previous::*;
+/// #
+/// # #[derive(DefaultSchedule, ScheduleLabel, Debug, Clone, Hash, PartialEq, Eq)]
+/// # struct GameLogic;
+///
+/// #[derive(Component, Clone)]
 /// struct Health(pub u32);
 ///
-/// #[derive(DefaultSchedule, ScheduleLabel, ...)]
+/// #[derive(DefaultSchedule, ScheduleLabel, Debug, Clone, Hash, PartialEq, Eq)]
 /// struct AfterGameLogic;
+///
 ///
 /// // create a type alias to reduce boilerplate
 /// type Previous<T> = bevy_previous::Previous<T, AfterGameLogic>;
@@ -53,25 +64,48 @@ pub use bevy_previous_macro::DefaultSchedule;
 /// fn main() {
 ///     App::new()
 ///         .add_plugins(PreviousPlugin::<Health, AfterGameLogic>::default())
-///         .add_systems(Update, print_differences)
+///         .add_systems(GameLogic, print_differences)
 ///         .run();
 /// }
 ///
 /// fn print_differences(query: Query<(&Health, &Previous<Health>), Changed<Health>>) {
 ///     for (health, previous_health) in &query {
-///         println!("Health reduced by {}", previous_health - health);
+///         println!("Health reduced by {}", previous_health.0.0 - health.0);
 ///     }
 /// }
 /// ```
-#[derive(Component, Clone)]
+#[derive(Component, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Previous<T: Component + Clone, S: ScheduleLabel + Clone = Last>(pub T, PhantomData<S>);
+
+impl<T, S> Previous<T, S>
+where
+    T: Component + Clone,
+    S: ScheduleLabel + Clone,
+{
+    pub fn new(value: T) -> Self {
+        Previous(value, PhantomData)
+    }
+}
+
+impl<T, S> From<T> for Previous<T, S>
+where
+    T: Component + Clone,
+    S: ScheduleLabel + Clone,
+{
+    fn from(value: T) -> Self {
+        Previous::new(value)
+    }
+}
 
 /// A type alias for [`Previous<T, FixedLast>`] to be used with [`FixedPreviousPlugin<T>`].
 ///
 /// # Examples
 ///
 /// ```
-/// #[derive(Component)]
+/// # use bevy::prelude::*;
+/// # use bevy_previous::*;
+///
+/// #[derive(Component, Clone)]
 /// struct Health(pub u32);
 ///
 /// fn main() {
@@ -83,7 +117,7 @@ pub struct Previous<T: Component + Clone, S: ScheduleLabel + Clone = Last>(pub T
 ///
 /// fn print_differences(query: Query<(&Health, &FixedPrevious<Health>), Changed<Health>>) {
 ///     for (health, previous_health) in &query {
-///         println!("Health reduced by {}", previous_health - health);
+///         println!("Health reduced by {}", previous_health.0.0 - health.0);
 ///     }
 /// }
 /// ```
@@ -103,7 +137,10 @@ pub type FixedPrevious<T> = Previous<T, FixedLast>;
 /// # Examples
 ///
 /// ```
-/// #[derive(Component)]
+/// # use bevy::prelude::*;
+/// # use bevy_previous::*;
+///
+/// #[derive(Component, Clone)]
 /// struct Health(pub u32);
 ///
 /// fn main() {
@@ -115,7 +152,7 @@ pub type FixedPrevious<T> = Previous<T, FixedLast>;
 ///
 /// fn print_differences(query: Query<(&Health, &Previous<Health>), Changed<Health>>) {
 ///     for (health, previous_health) in &query {
-///         println!("Health reduced by {}", previous_health - health);
+///         println!("Health reduced by {}", previous_health.0.0 - health.0);
 ///     }
 /// }
 /// ```
@@ -123,10 +160,16 @@ pub type FixedPrevious<T> = Previous<T, FixedLast>;
 /// Custom schedule:
 ///
 /// ```
-/// #[derive(Component)]
+/// # use bevy::{ecs::schedule::ScheduleLabel, prelude::*};
+/// # use bevy_previous::*;
+/// #
+/// # #[derive(DefaultSchedule, ScheduleLabel, Debug, Clone, Hash, PartialEq, Eq)]
+/// # struct GameLogic;
+///
+/// #[derive(Component, Clone)]
 /// struct Health(pub u32);
 ///
-/// #[derive(DefaultSchedule, ScheduleLabel, ...)]
+/// #[derive(DefaultSchedule, ScheduleLabel, Debug, Clone, Hash, PartialEq, Eq)]
 /// struct AfterGameLogic;
 ///
 /// // create a type alias to reduce boilerplate
@@ -139,19 +182,28 @@ pub type FixedPrevious<T> = Previous<T, FixedLast>;
 /// Or:
 ///
 /// ```
+/// # use bevy::prelude::*;
+/// # use bevy_previous::*;
+/// # mod other_lib {
+/// #   use bevy::{ecs::schedule::ScheduleLabel, prelude::*};
+/// #   #[derive(ScheduleLabel, Debug, Clone, Hash, PartialEq, Eq)]
+/// #   pub struct Schedule;
+/// # }
+///
 /// // doesn't impl DefaultSchedule
 /// use other_lib::Schedule;
 ///
-/// #[derive(Component)]
+/// #[derive(Component, Clone)]
 /// struct Health(pub u32);
 ///
 /// // create a type alias to reduce boilerplate
 /// type Previous<T> = bevy_previous::Previous<T, Schedule>;
 ///
 /// App::new()
-///     .add_plugins(PreviousPlugin::<Health, Schedule>::new(Schedule));
+///     .add_plugins(PreviousPlugin::<Health, Schedule>::new(Schedule))
+///     .run();
 /// ```
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct PreviousPlugin<T: Component + Clone, S: ScheduleLabel + Clone = Last> {
     schedule: S,
     _t: PhantomData<T>,
@@ -180,7 +232,7 @@ fn update<T: Component + Clone>(
     for (entity, t) in &query {
         commands
             .entity(entity)
-            .insert(Previous::<T>(t.clone(), PhantomData));
+            .insert(Previous::<T>::new(t.clone()));
     }
 }
 

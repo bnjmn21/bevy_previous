@@ -278,11 +278,12 @@ name = "bevy_previous"
 version = "1.0.0"
 dependencies = [
  "bevy",
- "bevy_previous_macro",
+ "bevy_previous_derive",
+ "serde",
 ]
 
 [[package]]
-name = "bevy_previous_macro"
+name = "bevy_previous_derive"
 version = "1.0.0"
 dependencies = [
  "quote",
