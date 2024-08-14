@@ -13,4 +13,4 @@ categories = ["game-engines", "game-development"]
 
 [dependencies]
 bevy = { version = "0.14.1", default-features = false }
-bevy_previous_macro = { path = "bevy_previous_macro" }
+bevy_previous_macro = { path = "bevy_previous_macro", version = "1.0.0" }
