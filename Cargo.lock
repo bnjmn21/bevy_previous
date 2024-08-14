@@ -275,7 +275,7 @@ dependencies = [
 
 [[package]]
 name = "bevy_previous"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "bevy",
  "bevy_previous_derive",

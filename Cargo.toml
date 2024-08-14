@@ -2,7 +2,7 @@
 
 [package]
 name = "bevy_previous"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 authors = ["bnjmn21"]
 description = "Access previous values of components"
