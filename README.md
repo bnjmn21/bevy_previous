@@ -56,7 +56,7 @@ fn main() {
 
 fn print_differences(query: Query<(&Health, &Previous<Health, FixedLast>), Changed<Health>>) {
     for (health, previous_health) in &query {
-        println!("Health reduced by {}", previous_health - health);
+        println!("Health reduced by {}", previous_health.0.0 - health.0);
     }
 }
 ```
