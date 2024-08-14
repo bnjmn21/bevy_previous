@@ -7,7 +7,7 @@
 
 A simple library for [bevy](https://docs.rs/bevy) to access previous values of components.
 
-# Example
+## Example
 
 Suppose a game that consists of enemies with a `struct Health(pub u32)` component.
 Whenever an enemy is hit, a text should appear showing the amount of health they lost.
@@ -32,7 +32,7 @@ fn print_differences(query: Query<(&Health, &Previous<Health>), Changed<Health>>
 }
 ```
 
-# In-depth
+## In-depth
 
 Register the `PreviousPlugin::<T>` to activate previous values for a component `T`.
 Note that by default, changes are updated in the `Last` schedule.
@@ -67,7 +67,7 @@ Since this specific use case with `FixedMain` is quite common, there are type al
 `FixedPreviousPlugin<T>` and `FixedPrevious<T>`.
 If you have custom schedules, consider adding type aliases for those too.
 
-# Compatability
+## Compatability
 
 `bevy` | `bevy_previous`
 -------|----------------
@@ -76,7 +76,7 @@ If you have custom schedules, consider adding type aliases for those too.
 Additionally, the main branch of `bevy_previous` is
 up-to-date with bevy's main branch.
 
-# A note on `PreviousPlugin::default()`
+## A note on `PreviousPlugin::default()`
 
 This only works for schedules that implement the `DefaultSchedule` trait.
 This is automatically implemented by the standard bevy schedules, but
