@@ -1,6 +1,6 @@
 [package]
 name = "bevy_previous_derive"
-version = "1.0.0"
+version = "0.1.0"
 edition = "2021"
 description = "proc_macros for bevy_previous"
 repository = "https://github.com/bnjmn21/bevy_previous"

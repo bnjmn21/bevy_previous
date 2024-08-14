@@ -71,7 +71,7 @@ If you have custom schedules, consider adding type aliases for those too.
 
 `bevy` | `bevy_previous`
 -------|----------------
-`0.14` | `1.0.1`
+`0.14` | `0.1`
 
 Additionally, the main branch of `bevy_previous` is
 up-to-date with bevy's main branch.

@@ -2,7 +2,7 @@
 
 [package]
 name = "bevy_previous"
-version = "1.0.1"
+version = "0.1.0"
 edition = "2021"
 authors = ["bnjmn21"]
 description = "Access previous values of components"
@@ -15,7 +15,7 @@ categories = ["game-engines", "game-development"]
 
 [dependencies]
 bevy = { version = "0.14.1", default-features = false }
-bevy_previous_derive = { path = "bevy_previous_derive", version = "1.0.0", optional = true }
+bevy_previous_derive = { path = "bevy_previous_derive", version = "0.1.0", optional = true }
 
 serde = { version = "1.0", optional = true, features = ["derive"] }
 
