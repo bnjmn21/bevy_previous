@@ -88,4 +88,4 @@ for your own, you must either manually implement `DefaultSchedule` using
 Flag     | Description
 ---------|-------------
 `derive` | *default:* Enable the derive macro for `DefaultSchedule`
-`serde`  | Enable `serde` implementations for `Previous`
+`serde`  | *default:* Enable `serde` implementations for `Previous`

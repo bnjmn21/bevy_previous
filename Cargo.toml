@@ -20,7 +20,7 @@ bevy_previous_derive = { path = "bevy_previous_derive", version = "1.0.0", optio
 serde = { version = "1.0", optional = true, features = ["derive"] }
 
 [features]
-default = ["derive"]
+default = ["derive", "serde"]
 
 serde = ["dep:serde"]
 derive = ["dep:bevy_previous_derive"]

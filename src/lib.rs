@@ -2,9 +2,10 @@ use std::marker::PhantomData;
 
 #[allow(unused_imports)] // reason: used in docs
 use bevy::{app::FixedMain, ecs::schedule::ScheduleLabel, prelude::*};
-
 #[cfg(feature = "derive")]
 pub use bevy_previous_derive::DefaultSchedule;
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
 
 /// A component that represents the previous value of another component `T`.
 /// To enable previous-value-tracking for a component use [`PreviousPlugin`].
@@ -75,6 +76,7 @@ pub use bevy_previous_derive::DefaultSchedule;
 /// }
 /// ```
 #[derive(Component, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Previous<T: Component + Clone, S: ScheduleLabel + Clone = Last>(pub T, PhantomData<S>);
 
 impl<T, S> Previous<T, S>
